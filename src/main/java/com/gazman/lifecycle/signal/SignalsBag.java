@@ -1,9 +1,7 @@
 package com.gazman.lifecycle.signal;
 
-import com.gazman.lifecycle.log.Logger;
+import com.gazman.lifecycle.Factory;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 
@@ -44,23 +42,15 @@ public final class SignalsBag {
         return new Signal(type);
     }
 
-    public static <T> T log(Class<T> tClass, final String tag) {
+    public static <T> T log(Class<T> tClass) {
+        return log(tClass, Factory.inject(MethodLogger.class));
+    }
+
+    public static <T> T log(Class<T> tClass, MethodLoggable methodLoggable) {
         //noinspection unchecked
-        return (T) Proxy.newProxyInstance(tClass.getClassLoader(), new Class[]{tClass}, new InvocationHandler() {
-
-            private Logger logger = Logger.create(tag);
-
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                StringBuilder stringBuilder = new StringBuilder();
-                if (args != null) {
-                    for (Object arg : args) {
-                        stringBuilder.append(arg).append(" ");
-                    }
-                }
-                logger.d(method.getName(), stringBuilder);
-                return null;
-            }
+        return (T) Proxy.newProxyInstance(tClass.getClassLoader(), new Class[]{tClass}, (proxy, method, args) -> {
+            methodLoggable.log(method, args);
+            return null;
         });
     }
 

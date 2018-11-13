@@ -4,7 +4,6 @@ import com.gazman.lifecycle.Factory;
 import com.gazman.lifecycle.signal.invoker.DefaultInvoker;
 import com.gazman.lifecycle.signal.invoker.Invoker;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
@@ -33,12 +32,8 @@ public final class Signal<T> {
 
     Signal(Class<T> type) {
         originalType = type;
-        InvocationHandler invocationHandler = (proxy, method, args) -> {
-            Signal.this.invoke(method, args);
-            return null;
-        };
         //noinspection unchecked
-        dispatcher = (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, invocationHandler);
+        dispatcher = (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[]{type}, this::invoke);
     }
 
     /**
@@ -135,7 +130,7 @@ public final class Signal<T> {
         hasListeners = 0 < classListeners.size() + oneTimeClassListeners.size() + listeners.size() + oneTimeListeners.size();
     }
 
-    void invoke(Method method, Object[] args) {
+    private Object invoke(@SuppressWarnings("unused") Object proxy, Method method, Object[] args) {
         Class<? extends T> classListener;
         T listener = null;
 
@@ -187,17 +182,12 @@ public final class Signal<T> {
             invoker.invoke(method, args, listener);
         }
         updateHasListeners();
+
+        return null;
     }
 
 
     public boolean hasListeners() {
         return hasListeners;
-    }
-
-    private static class NoStackTraceRunTimeException extends RuntimeException {
-        @Override
-        public Throwable fillInStackTrace() {
-            return this;
-        }
     }
 }

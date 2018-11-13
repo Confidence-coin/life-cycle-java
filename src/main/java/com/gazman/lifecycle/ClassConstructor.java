@@ -11,8 +11,9 @@ class ClassConstructor {
     static HashMap<Class<?>, HashMap<String, Object>> singletons = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T> T constructSingleTon(String family, Class<?> classToUse, Object... params) {
+    static <T> T constructSingleTon(String family, Class<?> classToUse, Object... params) {
         HashMap<String, Object> map = singletons.get(classToUse);
+        //noinspection Java8MapApi
         if (map == null) {
             map = new HashMap<>();
             singletons.put(classToUse, map);
@@ -22,7 +23,7 @@ class ClassConstructor {
             if (params.length > 0) {
                 instance = construct(classToUse, params);
             } else {
-                instance = build(classToUse);
+                instance = constructWithNoParams(classToUse);
             }
             map.put(family, instance);
             if (instance instanceof Injector) {
@@ -33,7 +34,7 @@ class ClassConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T build(Class<T> classToUse) {
+    static <T> T constructWithNoParams(Class<T> classToUse) {
         try {
             Builder<T> builder = Registrar.buildersMap.get(classToUse);
             if (builder != null) {
@@ -51,7 +52,7 @@ class ClassConstructor {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T construct(Class<T> classToUse, Object... params) {
+    static <T> T construct(Class<T> classToUse, Object... params) {
         try {
             Builder<T> builder = Registrar.buildersMap.get(classToUse);
             if (builder != null) {

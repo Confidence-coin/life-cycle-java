@@ -31,16 +31,7 @@ public abstract class Bootstrap extends Registrar {
         return registrationCompleted.get();
     }
 
-    public void initialize(Object main) {
-        initialize(main.getClass());
-    }
-
-    public void initialize(Class mainClass) {
-        G.mainClass = mainClass;
-        initialize();
-    }
-
-    private void initialize() {
+    public void initialize() {
         if (coreInitialization) {
             throw new IllegalStateException(
                     "Initialization process has already been executed.");

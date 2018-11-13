@@ -1,6 +1,5 @@
 package com.gazman.lifecycle.signal.invoker;
 
-import com.gazman.lifecycle.log.Logger;
 import com.gazman.lifecycle.utils.UnhandledExceptionHandler;
 
 import java.lang.reflect.Method;
@@ -9,7 +8,6 @@ import java.lang.reflect.Method;
  * Created by Ilya Gazman on 3/18/2016.
  */
 public class BaseInvoker implements Runnable {
-    private Logger logger = Logger.create("BaseInvoker");
     public Method method;
     public Object[] args;
     public Object listener;
@@ -30,16 +28,7 @@ public class BaseInvoker implements Runnable {
             method.invoke(listener, args);
         } catch (Throwable e) {
             if (UnhandledExceptionHandler.callback == null) {
-                Throwable cause = e.getCause();
-                if (cause == null) {
-                    cause = e;
-                }
-                logger.e("LifeCycle", "Unhandled Exception, consider providing UnhandledExceptionHandler.callback", cause);
-                try {
-                    Thread.sleep(10);
-                    System.exit(2);
-                } catch (InterruptedException ignore) {
-                }
+                throw new Error("Unhandled Exception, consider providing UnhandledExceptionHandler.callback", e);
             } else {
                 UnhandledExceptionHandler.callback.onApplicationError(e);
             }

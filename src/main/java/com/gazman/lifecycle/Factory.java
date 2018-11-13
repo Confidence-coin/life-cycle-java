@@ -37,7 +37,7 @@ public class Factory {
         if (Singleton.class.isAssignableFrom(classToUse)) {
             instance = ClassConstructor.constructSingleTon(family, classToUse);
         } else {
-            instance = ClassConstructor.build(classToUse);
+            instance = ClassConstructor.constructWithNoParams(classToUse);
             if (instance instanceof Injector) {
                 ((Injector) instance).injectionHandler(family);
             }
