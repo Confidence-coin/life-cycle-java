@@ -33,20 +33,20 @@ As you can see there is a full separation between the dispatcher, `LoginModel` a
 Here are a few more ways to use a Signal
 
 ```java
-    class LoginScreen{
-        public void init(){
-            
-            Signal<LoginSignal> loginSignal = SignalsBag.inject(LoginSignal.class);
-            loginSignal.addListenerOnce(userData -> {}); // The listener will be automatically removed after the first dispatch
-            loginSignal.addListener(LoginScreen.class); // LoginScreen will be injected(see below what injection is) each time 
-            //                                              to handle the this event
-            loginSignal.addListenerOnce(LoginScreen.class); // he listener will be automatically removed after the first dispatch
-            
-            // Unregister event
-            loginSignal.removeListener(LoginScreen.class);
-            loginSignal.removeListener(this); 
-        }
+class LoginScreen{
+    public void init(){
+        
+        Signal<LoginSignal> loginSignal = SignalsBag.inject(LoginSignal.class);
+        loginSignal.addListenerOnce(userData -> {}); // The listener will be automatically removed after the first dispatch
+        loginSignal.addListener(LoginScreen.class); // LoginScreen will be injected(see below what injection is) each time 
+        //                                              to handle the this event
+        loginSignal.addListenerOnce(LoginScreen.class); // he listener will be automatically removed after the first dispatch
+        
+        // Unregister event
+        loginSignal.removeListener(LoginScreen.class);
+        loginSignal.removeListener(this); 
     }
+}
 ```
 
 Singletons
@@ -113,15 +113,15 @@ In case you need more control over the injection you can use a builder, it will 
 
 ```java
 class MyApp extends Bootstrap {
-        @Override
-        protected void initClasses() {
-            this.registerClass(MyUserModel.class);
-            addBuilder(MyUserModel.class, (classToInject, params) -> {
-                MyUserModel myUserModel = new MyUserModel();
-                return myUserModel;
-            });
-        }
+    @Override
+    protected void initClasses() {
+        this.registerClass(MyUserModel.class);
+        addBuilder(MyUserModel.class, (classToInject, params) -> {
+            MyUserModel myUserModel = new MyUserModel();
+            return myUserModel;
+        });
     }
+}
 ```
 
 Families
