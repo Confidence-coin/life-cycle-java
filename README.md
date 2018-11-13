@@ -126,7 +126,7 @@ class MyApp extends Bootstrap {
 
 Families
 ---------
-Sometimes times you need using the [multiton pattern](https://en.wikipedia.org/wiki/Multiton_pattern). For example, you are making an eCommerce app, and you got two products pages that share much functionality but needs to have their model and may even some minor changes. To address this need, a family was created.
+Sometimes times you need using the [Multiton pattern](https://en.wikipedia.org/wiki/Multiton_pattern). For example, you are making an eCommerce app, and you got two products pages that share much functionality but needs to have their model and may even some minor changes. To address this need, a family was created.
 
 ```java
 class LoginScreen{
