@@ -126,7 +126,7 @@ class MyApp extends Bootstrap {
 
 Families
 ---------
-Sometimes times you need using the [multiton pattern (https://en.wikipedia.org/wiki/Multiton_pattern). For example, you are making an eCommerce app, and you got two products pages that share much functionality but needs to have their model and may even some minor changes. To address this need, a family was created.
+Sometimes times you need using the [multiton pattern](https://en.wikipedia.org/wiki/Multiton_pattern). For example, you are making an eCommerce app, and you got two products pages that share much functionality but needs to have their model and may even some minor changes. To address this need, a family was created.
 
 ```java
 class LoginScreen{
@@ -151,7 +151,7 @@ class LoginModel{
 }
 ```
 
-During the construction of `LoginScreen` we are constructing a `LoginModel` but before the construction of aether one of those is ended we are starting to construct `LoginScreen` again from the `LoginModel`. The result of this will be a StackOverflowException. So instead of telling you don't do it, try to keep a separation of control in your app and fallow the [Single responsibility principle (https://en.wikipedia.org/wiki/Single_responsibility_principle). I actually would like to show you a LifeCycle solution to this, it's called `Injector` and used like this:
+During the construction of `LoginScreen` we are constructing a `LoginModel` but before the construction of aether one of those is ended we are starting to construct `LoginScreen` again from the `LoginModel`. The result of this will be a StackOverflowException. So instead of telling you don't do it, try to keep a separation of control in your app and fallow the [Single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle). I actually would like to show you a LifeCycle solution to this, it's called `Injector` and used like this:
  
 ```java
 class LoginScreen{
