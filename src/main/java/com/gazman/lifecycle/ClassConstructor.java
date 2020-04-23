@@ -40,7 +40,16 @@ class ClassConstructor {
             if (builder != null) {
                 return builder.build(classToUse, NO_PARAMS);
             }
-            return classToUse.newInstance();
+
+            Constructor<T> constructor = classToUse.getDeclaredConstructor();
+            if(!constructor.isAccessible()){
+                constructor.setAccessible(true);
+                T t = constructor.newInstance();
+                constructor.setAccessible(false);
+                return t;
+            }
+
+            return constructor.newInstance();
         } catch (Throwable throwable) {
             if (UnhandledExceptionHandler.callback != null) {
                 UnhandledExceptionHandler.callback.onApplicationError(throwable);
@@ -71,6 +80,12 @@ class ClassConstructor {
                     if (!parameterType.isAssignableFrom(params[i].getClass())) {
                         continue MAIN_LOOP;
                     }
+                }
+                if(!constructor.isAccessible()){
+                    constructor.setAccessible(true);
+                    T t = (T) constructor.newInstance(params);
+                    constructor.setAccessible(false);
+                    return t;
                 }
                 return (T) constructor.newInstance(params);
 
